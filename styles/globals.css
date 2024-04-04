@@ -1,0 +1,48 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+  body {
+    background-color: #00000000;
+  }
+  .non-selectable {
+    user-select: none;
+    -webkit-user-select: none;
+    -ms-user-select: none;
+  }
+}
+/* :root {
+  --primary-background-1: #00000000;
+  --secondary-background-1: #00000000;
+  --primary-background-2: #F7F6F608;
+  --secondary-background-2: #F7F6F608;
+  --primary-component-ascent-3: #faebeb12;
+  --secondary-component-ascent-3: #faebeb12;
+  --primary-component-ascent-4: #f8eded19;
+  --secondary-component-ascent-4: #f8eded19;
+  --primary-component-ascent-5: #ffeeee20;
+  --secondary-component-ascent-5: #ffeeee20;
+  --primary-border-ascent-6: #ffeeee20;
+  --secondary-border-ascent-6: #ffeeee20;
+  --primary-border-ascent-7: #FCEAEA3B;
+  --secondary-border-ascent-7: #FCEAEA3B;
+  --primary-border-ascent-8: #FFEBEE56;
+  --secondary-border-ascent-8: #FFEBEE56;
+  --primary-solid-color-ascent-9: #FFFFFF;
+  --secondary-solid-color-ascent-9: #FDEDED66;
+  --primary-solid-color-ascent-10: #FEFDFDF7;
+--secondary-solid-color-ascent-10: #FFF0F075;
+--primary-text-ascent-11: #FEF4F4B3;
+--secondary-text-ascent-11: #FEF4F4B3;
+--primary-text-ascent-12: #FEFEFEEE;
+--secondary-text-ascent-12: #FEFEFEEE;
+} */
+
+
+/* .navbar {
+    @apply  max-w-lg m-auto;
+    background-color: #faebeb12 !important;
+    color: #FEFEFEEE !important;
+    border: 1px solid #FFEBEE56 !important;
+  }   */
