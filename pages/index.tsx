@@ -5,7 +5,7 @@ import { Input } from "@/components/ui/input";
 import { SubmitHandler, useForm } from "react-hook-form";
 import { z } from "zod"
 import { Button } from "@/components/ui/button";
-import GoogleIcon from "@/public/static/google-icon-logo-svgrepo-com.svg"
+// import GoogleIcon from "@/public/static/google-icon-logo-svgrepo-com.svg"
 import { signIn } from "next-auth/react";
 import { authOptions } from "./api/auth/[...nextauth]";
 import { getServerSession } from "next-auth/next";
@@ -80,7 +80,7 @@ export default function Home() {
           </div>
         </div>
         <div className="container relative border-2 border-black border-dashed rounded-lg px-3 py-6 flex justify-center m-auto max-w-xs">
-          <Button onClick={() => signIn('google', {callbackUrl: '/dashboard'})}> <GoogleIcon className="w-6 h-6 mr-3" />  Sign In With Google</Button>
+          <Button onClick={() => signIn('google', {callbackUrl: '/dashboard'})}>  Sign In With Google</Button>
           <h1 className="absolute -top-3 bg-white px-1 font-bold text-xl">OR</h1>
         </div>
       </main>
