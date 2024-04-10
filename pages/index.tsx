@@ -4,11 +4,13 @@ import { Form, FormControl, FormDescription, FormField, FormItem, FormLabel, For
 import { Input } from "@/components/ui/input";
 import { SubmitHandler, useForm } from "react-hook-form";
 import { z } from "zod"
+import { zodResolver } from "@hookform/resolvers/zod"
 import { Button } from "@/components/ui/button";
-// import GoogleIcon from "@/public/static/google-icon-logo-svgrepo-com.svg"
+
 import { signIn } from "next-auth/react";
 import { authOptions } from "./api/auth/[...nextauth]";
 import { getServerSession } from "next-auth/next";
+import Link from "next/link";
 
 const inter = Inter({ subsets: ["latin"] });
 
@@ -16,23 +18,30 @@ type Inputs = {
   email: string
   password: string
 }
+const formSchema = z.object({
+  email: z.string().email(),
+  password: z.string().min(4, {
+    message: "password must be between 4 - 20 characters.",
+  }).max(20, {
+    message: "password must be between 4 - 20 characters.",
+  }),
+})
 
 export default function Home() {
   
-  const form = useForm<Inputs>()
-  const formSchema = z.object({
-    email: z.string().email(),
-    password: z.string().min(4, {
-      message: "password must be between 4 - 20 characters.",
-    }).max(20, {
-      message: "password must be between 4 - 20 characters.",
-    }),
+  const form = useForm<z.infer<typeof formSchema>>({
+    resolver: zodResolver(formSchema),
+    defaultValues: {
+      email: "",
+      password: "",
+    },
   })
 
-  const onSubmit: SubmitHandler<Inputs> = (values: z.infer<typeof formSchema>) => {
+  const onSubmit: SubmitHandler<Inputs> =  async (values: z.infer<typeof formSchema>) => {
     // Do something with the form values.
     // ✅ This will be type-safe and validated.
     console.log(values)
+    
   }
   return (
     <>
@@ -76,7 +85,14 @@ export default function Home() {
                 <Button type="submit">Submit</Button>
               </form>
             </Form>
-
+            <hr className="my-5" />
+            <div className="grid place-content-center">
+              <Button className="mx-auto" asChild>
+                <Link href={'/register'}>
+                  Register
+                </Link>
+              </Button>
+              </div>
           </div>
         </div>
         <div className="container relative border-2 border-black border-dashed rounded-lg px-3 py-6 flex justify-center m-auto max-w-xs">
