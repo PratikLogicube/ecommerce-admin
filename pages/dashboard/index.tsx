@@ -47,7 +47,9 @@ import {
   TableRow,
 } from "@/components/ui/table"
 
-export default function Dashboard() {
+export default function Dashboard({user}: any) {
+  console.log('loggedIn user session:', user);
+  
   return (
     <div className="flex min-h-screen w-full flex-col">
       <main className="flex flex-1 flex-col gap-4 p-4 md:gap-8 md:p-8">
@@ -333,22 +335,25 @@ export default function Dashboard() {
 
 
 export async function getServerSideProps(context: any) {
-    const session = await getServerSession(context.req, context.res, authOptions)
-    
-    if (!session) {
-      return {
-        redirect: {
-          destination: '/',
-          permanent: false
-        }
-      }
-    }
-  
+  const session = await getServerSession(context.req, context.res, authOptions)
+  console.log('client session', session?.user);
 
+  const { image, ...user } = session?.user 
+  
+  if (!session) {
     return {
-      props: {
-        session
+      redirect: {
+        destination: '/',
+        permanent: false
       }
     }
-   
   }
+
+
+  return {
+    props: {
+      user
+    }
+  }
+ 
+}

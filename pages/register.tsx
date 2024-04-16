@@ -3,9 +3,14 @@ import { Form, FormControl, FormDescription, FormField, FormItem, FormLabel, For
 import { Input } from '@/components/ui/input'
 import { zodResolver } from '@hookform/resolvers/zod';
 import { signIn } from 'next-auth/react';
+import Link from 'next/link';
 import React from 'react'
 import { SubmitHandler, useForm } from "react-hook-form";
 import { z } from "zod"
+import Arrow from "@/public/static/arrow-sm-right-svgrepo-com.svg";
+import createUser from '@/lib/apis/createUser';
+import { useToast } from '@/components/ui/use-toast';
+import { useRouter } from 'next/navigation';
 
 type Props = {}
 type Inputs = {
@@ -28,7 +33,8 @@ const formSchema = z.object({
     }),
 })
 const Register = (props: Props) => {
-
+    const router = useRouter()
+    const { toast } = useToast()
     const form = useForm<Inputs>({
         resolver: zodResolver(formSchema),
         defaultValues: {
@@ -37,28 +43,32 @@ const Register = (props: Props) => {
             password: ""
         }
     })
-   
 
-    const onSubmit: SubmitHandler<Inputs> = async(values: z.infer<typeof formSchema>) => {
-        // Do something with the form values.
-        // ✅ This will be type-safe and validated.
+
+    const onSubmit: SubmitHandler<Inputs> = async (values: z.infer<typeof formSchema>) => {
+
         const submitValues = {
             ...values, avatar: 'https://picsum.photos/800'
         }
-        console.log(submitValues)
-        const api = await fetch('https://api.escuelajs.co/api/v1/users/', {
-            method: 'POST',
-            headers: {
-                'Content-Type': 'Application/json'
-            },
-            body: JSON.stringify(submitValues)
+        toast({
+            title: 'creating your account...'
         })
-        const res = await api.json()
-        console.log({res});
-        
+        const user = await createUser(submitValues)
+        if (user) {
+            toast({
+                title: 'account created successfully...'
+            })
+            router.replace('/dashboard')
+        }
+
     }
     return (
         <div className="container border-2 border-black border-dashed rounded-lg px-3 py-10 m-auto max-w-xs">
+            <Button asChild className='mb-5'>
+                <Link href="/" className='flex gap-2'>
+                    <Arrow className="w-5 h-5 aspect-square stroke-white rotate-180" />  Back To Log In
+                </Link>
+            </Button>
             <Form {...form}>
                 <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-8 flex flex-col items-center">
                     <FormField
@@ -112,9 +122,9 @@ const Register = (props: Props) => {
                 </form>
             </Form>
             <div className="container relative border-2 border-black border-dashed rounded-lg px-3 py-6 flex justify-center m-auto mt-5 max-w-xs">
-          <Button onClick={() => signIn('google', {callbackUrl: '/dashboard'})}>  Sign In With Google</Button>
-          <h1 className="absolute -top-3 bg-white px-1 font-bold text-xl">OR</h1>
-        </div>
+                <Button onClick={() => signIn('google', { callbackUrl: '/dashboard' })}>  Sign Up With Google</Button>
+                <h1 className="absolute -top-3 bg-white px-1 font-bold text-xl">OR</h1>
+            </div>
         </div>
     )
 }

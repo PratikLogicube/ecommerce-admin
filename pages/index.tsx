@@ -11,6 +11,9 @@ import { signIn } from "next-auth/react";
 import { authOptions } from "./api/auth/[...nextauth]";
 import { getServerSession } from "next-auth/next";
 import Link from "next/link";
+import { toast, useToast } from "@/components/ui/use-toast";
+import { useRouter } from "next/navigation";
+
 
 const inter = Inter({ subsets: ["latin"] });
 
@@ -28,7 +31,7 @@ const formSchema = z.object({
 })
 
 export default function Home() {
-  
+  const { toast } = useToast()
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
     defaultValues: {
@@ -36,12 +39,22 @@ export default function Home() {
       password: "",
     },
   })
+  const router = useRouter();
 
-  const onSubmit: SubmitHandler<Inputs> =  async (values: z.infer<typeof formSchema>) => {
-    // Do something with the form values.
-    // ✅ This will be type-safe and validated.
+  const onSubmit: SubmitHandler<Inputs> = async (values: z.infer<typeof formSchema>) => {
     console.log(values)
-    
+    const submitValues = {
+      ...values,
+      avatar: "https://picsum.photos/800",
+    }
+    toast({
+      title: 'logging In...'
+    })
+    signIn("credentials", {
+      ...submitValues,
+      // callbackUrl: '/dashboard'
+    })
+
   }
   return (
     <>
@@ -49,6 +62,7 @@ export default function Home() {
         className={`*:non-selectable login-wrapper relative z-0 flex min-h-screen flex-col items-center justify-between ${inter.className} z-0`}
       >
         <div className="container border-2 border-black border-dashed rounded-lg px-3 py-10 m-auto max-w-xs">
+          <h1 className="text-center text-2xl">WELCOME BACK!</h1>
           <div className="form-wrapper p-3 rounded-lg ">
             <Form {...form}>
               <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-8 flex flex-col items-center">
@@ -77,12 +91,12 @@ export default function Home() {
                       <FormLabel>Password</FormLabel>
                       <FormControl>
                         <Input placeholder="Password" type="password" {...field} autoComplete="false" />
-                      </FormControl>  
+                      </FormControl>
                       <FormMessage />
                     </FormItem>
                   )}
                 />
-                <Button type="submit">Submit</Button>
+                <Button type="submit">Log In</Button>
               </form>
             </Form>
             <hr className="my-5" />
@@ -92,11 +106,11 @@ export default function Home() {
                   Register
                 </Link>
               </Button>
-              </div>
+            </div>
           </div>
         </div>
         <div className="container relative border-2 border-black border-dashed rounded-lg px-3 py-6 flex justify-center m-auto max-w-xs">
-          <Button onClick={() => signIn('google', {callbackUrl: '/dashboard'})}>  Sign In With Google</Button>
+          <Button onClick={() => signIn('google', { callbackUrl: '/dashboard' })}>  Sign In With Google</Button>
           <h1 className="absolute -top-3 bg-white px-1 font-bold text-xl">OR</h1>
         </div>
       </main>
@@ -104,21 +118,21 @@ export default function Home() {
   );
 }
 
-export async function getServerSideProps(context: any) {
-  const session = await getServerSession(context.req, context.res, authOptions)
-  
-  if (session) {
-    return {
-      redirect: {
-        destination: '/dashboard',
-        permanent: false
-      }
-    }
-  }
-  return {
-    props: {
-      session
-    }
-  }
- 
-}
+// export async function getServerSideProps(context: any) {
+//   const session = await getServerSession(context.req, context.res, authOptions)
+
+//   if (session) {
+//     return {
+//       redirect: {
+//         destination: '/dashboard',
+//         permanent: false
+//       }
+//     }
+//   }
+//   return {
+//     props: {
+//       session
+//     }
+//   }
+
+// }
