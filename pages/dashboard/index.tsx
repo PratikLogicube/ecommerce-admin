@@ -2,16 +2,11 @@ import { getServerSession } from 'next-auth/next';
 import React from 'react'
 import { authOptions } from '../api/auth/[...nextauth]';
 import Link from "next/link"
-import { useSession } from "next-auth/react"
 import {
   Activity,
   ArrowUpRight,
-  CircleUser,
   CreditCard,
   DollarSign,
-  Menu,
-  Package2,
-  Search,
   Users,
 } from "lucide-react"
 
@@ -50,13 +45,12 @@ import {
 
 
 type Props = {
-session: Object
+  serversession: any
 }
 
-export default function Dashboard(props: Props) {
-  const { data: session ,status } = useSession()
-  
-  console.log('client session:', session);
+export default function Dashboard({serversession}: Props) {
+
+  console.log('serversession:', serversession);
   
   return (
     <div className="flex min-h-screen w-full flex-col">
@@ -342,24 +336,24 @@ export default function Dashboard(props: Props) {
 }
 
 
-// export async function getServerSideProps({req, res}: any) {
-//   const session = await getServerSession(req, res, authOptions)
-//   console.log('server session', session);
+export async function getServerSideProps({req, res}: any) {
+  const serversession = await getServerSession(req, res, authOptions)
+  console.log('server session', serversession);
   
-//   if (!session) {
-//     return {
-//       redirect: {
-//         destination: '/',
-//         permanent: false
-//       }
-//     }
-//   }
+  if (!serversession) {
+    return {
+      redirect: {
+        destination: '/',
+        permanent: false
+      }
+    }
+  }
 
 
-//   return {
-//     props: {
-//       session
-//     }
-//   }
+  return {
+    props: {
+      serversession
+    }
+  }
  
-// }
+}
