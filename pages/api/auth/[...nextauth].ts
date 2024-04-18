@@ -5,10 +5,6 @@ import CredentialsProvider from "next-auth/providers/credentials";
 import { getToken } from "@/lib/apis/getToken";
 import { getUserInfo } from "@/lib/apis/getUserInfo";
 
-type Values = {
-  email: string;
-  password: string;
-};
 export const authOptions: AuthOptions = {
   secret: process.env.NEXTAUTH_SECRET,
   pages: {
@@ -27,27 +23,22 @@ export const authOptions: AuthOptions = {
 
       async authorize(credentials, req) {
         const token = await getToken(credentials);
-console.log({token});
 
         if (token) {
           const user = await getUserInfo(token);
-          console.log({user});
           
-          return user
-        }
-        
+          return { ...user, image: user.avatar };
+        } 
+        return null
       },
     }),
   ],
   callbacks: {
     async signIn({ user, account, profile, email, credentials }) {
-      console.log('signIn callback user:', {profile}, {user}, {account});
-      
-      return true
+      return (account?.type === "credentials" && user) ? true : false;
     },
-    async session({session, token, user}) {
-      console.log('session callback', { session });
-      return session
+    async session({ session, token, user }) {
+      return session;
     },
   },
 };

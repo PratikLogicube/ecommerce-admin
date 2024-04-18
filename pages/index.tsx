@@ -52,7 +52,7 @@ export default function Home() {
     })
     signIn("credentials", {
       ...submitValues,
-      // callbackUrl: '/dashboard'
+      callbackUrl: '/dashboard'
     })
 
   }

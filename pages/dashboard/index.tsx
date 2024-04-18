@@ -2,6 +2,7 @@ import { getServerSession } from 'next-auth/next';
 import React from 'react'
 import { authOptions } from '../api/auth/[...nextauth]';
 import Link from "next/link"
+import { useSession } from "next-auth/react"
 import {
   Activity,
   ArrowUpRight,
@@ -47,8 +48,15 @@ import {
   TableRow,
 } from "@/components/ui/table"
 
-export default function Dashboard({user}: any) {
-  console.log('loggedIn user session:', user);
+
+type Props = {
+session: Object
+}
+
+export default function Dashboard(props: Props) {
+  const { data: session ,status } = useSession()
+  
+  console.log('client session:', session);
   
   return (
     <div className="flex min-h-screen w-full flex-col">
@@ -334,26 +342,24 @@ export default function Dashboard({user}: any) {
 }
 
 
-export async function getServerSideProps(context: any) {
-  const session = await getServerSession(context.req, context.res, authOptions)
-  console.log('client session', session?.user);
-
-  const { image, ...user } = session?.user 
+// export async function getServerSideProps({req, res}: any) {
+//   const session = await getServerSession(req, res, authOptions)
+//   console.log('server session', session);
   
-  if (!session) {
-    return {
-      redirect: {
-        destination: '/',
-        permanent: false
-      }
-    }
-  }
+//   if (!session) {
+//     return {
+//       redirect: {
+//         destination: '/',
+//         permanent: false
+//       }
+//     }
+//   }
 
 
-  return {
-    props: {
-      user
-    }
-  }
+//   return {
+//     props: {
+//       session
+//     }
+//   }
  
-}
+// }
