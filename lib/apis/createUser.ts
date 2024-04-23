@@ -2,6 +2,7 @@ interface type {
     name: string;
     email: string;
     password: string;
+    avatar: string;
 }
 export default async function createUser(submitValues: type) {
     try {

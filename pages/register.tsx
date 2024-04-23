@@ -54,11 +54,17 @@ const Register = (props: Props) => {
             title: 'creating your account...'
         })
         const user = await createUser(submitValues)
+
+
         if (user) {
             toast({
                 title: 'account created successfully...'
             })
-            router.replace('/dashboard')
+            console.log({ user });
+            signIn('credentials', {
+                email: user.email, password: user.password, avatar: user.avatar, callbackUrl: '/dashboard'
+            })
+            return;
         }
 
     }

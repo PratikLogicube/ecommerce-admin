@@ -116,7 +116,7 @@ export default function Products({ products }: any) {
                           <span className="sr-only">Image</span>
                         </TableHead>
                         <TableHead>Name</TableHead>
-                        <TableHead>Status</TableHead>
+                        <TableHead>Category</TableHead>
                         <TableHead className="hidden md:table-cell">
                           Price
                         </TableHead>
@@ -136,17 +136,17 @@ export default function Products({ products }: any) {
                         <TableCell className="hidden sm:table-cell">
                           <Image
                             alt="Product image"
-                            className="aspect-square rounded-md object-cover"
+                            className="aspect-square rounded-md object-cover obj"
                             height="64"
                             src={product.image}
                             width="64"
                           />
                         </TableCell>
-                        <TableCell className="font-medium">
-                          Laser Lemonade Machine
+                        <TableCell className="font-medium overflow-hidden text-ellipsis whitespace-nowrap max-w-32">
+                          {product.title}
                         </TableCell>
                         <TableCell>
-                          <Badge variant="outline">Draft</Badge>
+                          <Badge variant="outline">{product.category}</Badge>
                         </TableCell>
                         <TableCell className="hidden md:table-cell">
                           $499.99

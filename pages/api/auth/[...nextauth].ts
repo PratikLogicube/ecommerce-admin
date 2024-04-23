@@ -4,6 +4,7 @@ import GoogleProvider from "next-auth/providers/google";
 import CredentialsProvider from "next-auth/providers/credentials";
 import { getToken } from "@/lib/apis/getToken";
 import { getUserInfo } from "@/lib/apis/getUserInfo";
+import createUser from "@/lib/apis/createUser";
 
 export const authOptions: AuthOptions = {
   secret: process.env.NEXTAUTH_SECRET,
@@ -35,11 +36,31 @@ export const authOptions: AuthOptions = {
   ],
   callbacks: {
     async signIn({ user, account, profile, email, credentials }) {
-      return (account?.type === "credentials" && user) ? true : false;
+      console.log({user, account, profile, email});
+      
+      if (account?.type === "credentials" && user) {
+        return true;
+      }
+
+      if (account?.type === 'oauth' && account.provider === 'google' && user) {
+       const userRes =  await createUser({
+          name: user?.name! || "",
+          email: user?.email! || "",
+          password: profile?.sub! || "",
+          avatar: user?.image! || "",
+       })
+        if (userRes) return true;
+      }
+      
+      return false
+    },
+    jwt: async ({token})=> {
+      return token
     },
     async session({ session, token, user }) {
       return session;
     },
+    
   },
 };
 
