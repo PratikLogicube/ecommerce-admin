@@ -44,10 +44,10 @@ export const authOptions: AuthOptions = {
 
       if (account?.type === 'oauth' && account.provider === 'google' && user) {
        const userRes =  await createUser({
-          name: user?.name! || "",
-          email: user?.email! || "",
-          password: profile?.sub! || "",
-          avatar: user?.image! || "",
+          name: user?.name!,
+          email: user?.email!,
+          password: profile?.sub!,
+          avatar: user?.image!,
        })
         if (userRes) return true;
       }
